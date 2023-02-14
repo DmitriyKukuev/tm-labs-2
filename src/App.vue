@@ -14,6 +14,7 @@
         </header>
 
         <main class="px-60 py-5 flex-1 bg-gray-100">
+            <Head :title="$route.name ?? 'title'"/>
             <RouterView/>
         </main>
     </div>
@@ -21,4 +22,6 @@
 
 <script setup lang="ts">
     import {RouterLink, RouterView} from 'vue-router';
+    import Head from '@/components/Head.vue';
+
 </script>

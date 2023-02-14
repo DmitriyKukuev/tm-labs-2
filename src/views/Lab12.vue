@@ -1,6 +1,4 @@
 <template>
-    <Head title="Lab 1-2"/>
-
     <NumberInput v-model="a" name="a"/>
     <NumberInput v-model="b" name="b"/>
     <NumberInput v-model="h" name="h"/>
@@ -10,7 +8,6 @@
     import {ref} from "vue";
     import {random} from "@/helper";
     import NumberInput from '@/components/NumberInput.vue';
-    import Head from '@/components/Head.vue';
 
     const a = ref<number>(10);
     const b = ref<number>(17);

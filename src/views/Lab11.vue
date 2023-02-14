@@ -1,6 +1,4 @@
 <template>
-    <Head title="Lab 1-1"/>
-
     <NumberInput v-model="m" name="m"/>
 </template>
 
@@ -8,7 +6,6 @@
     import {ref} from "vue";
     import {random} from "@/helper";
     import NumberInput from '@/components/NumberInput.vue';
-    import Head from '@/components/Head.vue';
 
     const CUBE_TOSSES = 2;
     const MAX_RAND = 50;
