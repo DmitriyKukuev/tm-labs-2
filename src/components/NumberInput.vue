@@ -1,5 +1,7 @@
 <template>
-    <label class="flex gap-2 w-fit items-baseline mb-4">
+    <label class="flex gap-2 w-fit items-baseline mb-4"
+           :class="{'flex-col': inColumn}"
+    >
         <span class="text-gray-400 text-xl">{{ name }}:</span>
         <input type="number"
                v-model="value"
@@ -15,6 +17,7 @@
     type TComponentProps = {
         modelValue: any,
         name: string,
+        inColumn?: boolean,
     };
 
     const props = defineProps<TComponentProps>();

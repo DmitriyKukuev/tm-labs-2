@@ -18,6 +18,7 @@
     import NumberInput from '@/components/NumberInput.vue';
     import { Line } from 'vue-chartjs';
     import type {ChartData} from "chart.js";
+    import {options} from "@/chart";
     import {
         CategoryScale,
         Chart as ChartJS,
@@ -44,11 +45,6 @@
             },
         ]
     });
-
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-    };
 
     const a = ref<number>(1);
     const b = ref<number>(3);
