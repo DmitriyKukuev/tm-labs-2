@@ -18,7 +18,7 @@
     import NumberInput from '@/components/NumberInput.vue';
     import { Line } from 'vue-chartjs';
     import type {ChartData} from "chart.js";
-    import {options} from "@/chart";
+    import {defaultData, options} from "@/chart";
     import {
         CategoryScale,
         Chart as ChartJS,
@@ -32,19 +32,7 @@
 
     ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend );
 
-    const data = ref<ChartData>({
-        labels: [],
-        datasets: [
-            {
-                label: 'I',
-                data: [],
-                fill: false,
-                borderColor: '#e74062',
-                cubicInterpolationMode: 'monotone',
-                tension: 0.4,
-            },
-        ]
-    });
+    const data = ref<ChartData>(defaultData('I'));
 
     const a = ref<number>(1);
     const b = ref<number>(3);

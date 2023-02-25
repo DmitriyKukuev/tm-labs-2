@@ -1,33 +1,69 @@
 <template>
-    <NumberInput v-model="m" name="m"/>
+    <div class="grid grid-cols-2">
+        <div>
+            <NumberInput v-model="N" name="N"/>
+        </div>
 
-    <span class="text-gray-400 text-xl">Вероятность:</span> <span class="text-xl">{{P}}</span>
+        <div class="h-96">
+            <Line :data="data" :options="options"/>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
-    import {ref} from "vue";
-    import {C, random} from "@/helper";
+    import {ref, watch} from "vue";
+    import {random} from "@/helper";
     import NumberInput from '@/components/NumberInput.vue';
+    import type {ChartData} from "chart.js";
+    import {options, defaultData} from "@/chart";
+    import { Line } from 'vue-chartjs';
+    import {
+        CategoryScale,
+        Chart as ChartJS,
+        Legend,
+        LinearScale,
+        LineElement,
+        PointElement,
+        Title,
+        Tooltip
+    } from "chart.js";
 
-    const CUBE_TOSSES = 2;
+    ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+    const data = ref<ChartData>();
+
     const MAX_RAND = 50;
 
-    const m = ref<number>(20);
-    let n = C(CUBE_TOSSES, m.value);
+    const N = ref<number>(20000);
 
-    let p = m.value / n;
+    function randCube() {
+        data.value = defaultData();
 
-    let M = 0;
-    for (let i = 0; i < m.value; i++) {
-        const x = random(0, MAX_RAND);
-        const k1 = Math.trunc(MAX_RAND / x);
-        const y = random(0, MAX_RAND);
-        const k2 = Math.trunc(MAX_RAND / y);
+        const P = [];
+        let M = 0;
 
-        if (k1 === k2) {
-            M++;
+        for (let i = 0; i < N.value; i++) {
+            const x = random(0, MAX_RAND);
+            const k1 = Math.trunc(MAX_RAND / x);
+            const y = random(0, MAX_RAND);
+            const k2 = Math.trunc(MAX_RAND / y);
+
+            if (k1 === k2) {
+                M++;
+            }
+
+            P.push(M/i);
+        }
+
+        const step = N.value / 100;
+
+        for (let i = 0; i < N.value; i += step) {
+            data.value.labels?.push(i + 1);
+            data.value.datasets[0].data.push(P[i]);
         }
     }
 
-    const P = M / m.value;
+    randCube();
+
+    watch([N], randCube);
 </script>
