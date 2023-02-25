@@ -21,6 +21,7 @@
     import {ref, watch} from "vue";
     import { Line } from 'vue-chartjs';
     import type {ChartData} from "chart.js";
+    import {options, defaultData} from "@/chart";
     import {
         Chart as ChartJS,
         CategoryScale,
@@ -34,46 +35,37 @@
 
     ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-    const data = ref<ChartData>({
-        labels: [], // к
-        datasets: [
-            {
-                label: 'Mk (k)',
-                data: [], // Mk
-                fill: false,
-                borderColor: '#e74062',
-                cubicInterpolationMode: 'monotone',
-                tension: 0.4,
-            }
-        ]
-    });
-
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-    };
+    const data = ref<ChartData>();
 
     const M = ref<number>(1000);
     const k = ref<number>(10);
     const N = ref<number>(5000);
+    
+    function lampBreak() {
+        data.value = defaultData('Mk (k)');
 
-    for (let i = 0; i < k.value; i++) { // 1
-        let Mk = 0;
+        for (let i = 0; i < k.value; i++) { // 1
+            let Mk = 0;
 
-        for (let j = 0; j < N.value; j++) { // 2
-            const tau = [];
+            for (let j = 0; j < N.value; j++) { // 2
+                const tau = [];
 
-            for (let l = 0; l < i + 1; l++) { // 3
-                const y = Math.random();
-                tau.push(-M.value * Math.log(y));
+                for (let l = 0; l < i + 1; l++) { // 3
+                    const y = Math.random();
+                    tau.push(-M.value * Math.log(y));
+                }
+
+                const t = Math.min(...tau);
+                Mk += t;
             }
+            Mk /= N.value;
 
-            const t = Math.min(...tau);
-            Mk += t;
+            data.value.labels?.push(i + 1);
+            data.value.datasets[0].data.push(Mk);
         }
-        Mk /= N.value;
-
-        data.value.labels?.push(i + 1);
-        data.value.datasets[0].data.push(Mk);
     }
+
+    lampBreak();
+
+    watch([M, k, N], lampBreak);
 </script>
