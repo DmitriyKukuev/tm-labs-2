@@ -4,9 +4,9 @@
          :key="line"
     >
         <div class="h-5 w-5 border border-gray-500"
-             :style="{background: `rgba(200, 100, 255, ${j * 10 ** 140})`}"
+             :style="{background: `rgb(${getRGBC(j * 100)})`}"
              v-for="(j, column) in i"
-             :key="j"
+             :key="column"
              :data-line="line"
              :data-column="column"
              :data-value="j"
@@ -27,9 +27,13 @@ const w = (2 * lambda * S) / (l * R * i);
 
 const dt = 1;
 
-const v = 13;
 const n = 9;
 const m = 51;
+
+const getRGBC = (perc: number) => {
+    const color = Math.round(255 - 255 * perc / 100);
+    return `${color}, ${color}, ${color}`;
+}
 
 const table = Array.from(Array(n), () => Array(m).fill(1));
 table[8][23] = 1000;
@@ -47,35 +51,44 @@ let T3 = 0;
 let T4 = 0;
 
 function heat() {
-    for (let t = 0; t < n * m; t += dt) {
-        for (let i = 0; i < n; i++) {
-            for (let j = 0; j < m; j++) {
-                T1 = i - 1 < 0
-                    ? 0
-                    : table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i - 1][j]);
-
-                T2 = i + 1 >= 0
-                    ? 0
-                    : table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i + 1][j]);
-
-                T3 = j - 1 < 0
-                    ? 0
-                    : table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i][j - 1]);
-
-                T4 = j + 1 >= 0
-                    ? 0
-                    : table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i][j + 1]);
-
-                heatInfo.value[i][j] = (T1 + T2 + T3 + T4) / 4;
-                table[i][j] = (T1 + T2 + T3 + T4) / 4;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            T1 = 0;
+            if (i - 1 >= 0) {
+                T1 = table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i - 1][j]);
             }
+
+            T2 = 0;
+            if (i + 1 < n) {
+                T2 = table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i + 1][j]);
+            }
+
+            T3 = 0;
+            if (j - 1 >= 0) {
+                T3 = table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i][j - 1]);
+            }
+
+            T4 = 0;
+            if (j + 1 < m) {
+                T4 = table[i][j] - w * dt * (heatInfo.value[i][j] - heatInfo.value[i][j + 1]);
+            }
+
+            heatInfo.value[i][j] = (T1 + T2 + T3 + T4) / 4;
+            table[i][j] = (T1 + T2 + T3 + T4) / 4;
         }
     }
 }
 
-// setInterval(heat, dt * 50);
-//
-heat();
+let time = 0;
 
-// watch([a, tz, t0, requests], heat);
+let id = setInterval( () => {
+    heat();
+
+    time += dt;
+
+    if (time > n * m) {
+        clearInterval(id);
+    }
+}, dt * 10);
+
 </script>

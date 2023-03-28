@@ -1,4 +1,10 @@
 <template>
+    <div>Детали A</div>
+    <pre>{{ A.join(' ') }}</pre>
+
+    <div>Детали B</div>
+    <pre>{{ B.join(' ') }}</pre>
+
     <div>Время: {{ minTime }}</div>
     <div>Последовательность: {{ order.join(', ') }}</div>
 
@@ -8,13 +14,13 @@
              :key="value"
              class="absolute bg-amber-300 border border-black top-28 h-8"
              :style="{left: `${value * scale}px`, width: `${A[order[index]] * scale}px`}"
-        ></div>
+        >{{ order[index] }}</div>
 
         <div v-for="(value, index) in bArr"
              :key="value"
              class="absolute bg-cyan-300 border border-black bottom-28 h-8"
              :style="{left: `${value * scale}px`, width: `${B[order[index]] * scale}px`}"
-        ></div>
+        >{{ order[index] }}</div>
     </div>
 
 </template>
